@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Modern WhatsApp ordering storefront demo" />
+  <title>Velora Store — Shop Online</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="announcement">Free delivery on selected orders • Easy ordering through WhatsApp</div>
+
+  <header class="header">
+    <div class="container nav">
+      <button class="brand" onclick="goHome()" aria-label="Go home">
+        <span class="brand-mark">V</span>
+        <span><strong>VELORA</strong><small>SHOP</small></span>
+      </button>
+      <nav class="desktop-nav">
+        <button onclick="goHome()">Home</button>
+        <button onclick="scrollToProducts()">Shop</button>
+        <button onclick="scrollToCategories()">Categories</button>
+      </nav>
+      <button class="cart-button" onclick="openCart()">
+        Cart <span id="cartCount">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="app">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">CURATED • SIMPLE • DIRECT</span>
+          <h1>Good products.<br><em>Simple shopping.</em></h1>
+          <p>Browse our collection, add what you love to your cart, and place your order directly through WhatsApp.</p>
+          <div class="hero-actions">
+            <button class="btn btn-dark" onclick="scrollToProducts()">Shop collection</button>
+            <button class="text-btn" onclick="scrollToCategories()">Explore categories →</button>
+          </div>
+          <div class="trust-row">
+            <span>✓ Easy ordering</span><span>✓ WhatsApp support</span><span>✓ Secure checkout</span>
+          </div>
+        </div>
+        <div class="hero-art">
+          <div class="hero-card hero-card-back"></div>
+          <div class="hero-card hero-card-front">
+            <div class="hero-product-image" id="heroImage"></div>
+            <div class="hero-product-info">
+              <span>Featured collection</span>
+              <strong>Everyday essentials</strong>
+              <small>Handpicked for you</small>
+            </div>
+          </div>
+          <div class="floating-price">From ₹399</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="categories section" id="categories">
+      <div class="container">
+        <div class="section-head">
+          <div><span class="eyebrow">SHOP BY CATEGORY</span><h2>Find what you need</h2></div>
+          <button class="text-btn" onclick="showAllProducts()">View all →</button>
+        </div>
+        <div class="category-grid" id="categoryGrid"></div>
+      </div>
+    </section>
+
+    <section class="products section" id="products">
+      <div class="container">
+        <div class="section-head">
+          <div><span class="eyebrow">OUR COLLECTION</span><h2>Popular picks</h2></div>
+          <div class="filters" id="filters"></div>
+        </div>
+        <div class="product-grid" id="productGrid"></div>
+      </div>
+    </section>
+
+    <section class="whatsapp-banner">
+      <div class="container whatsapp-inner">
+        <div>
+          <span class="eyebrow">READY TO ORDER?</span>
+          <h2>Pick your products.<br>We'll take it from there.</h2>
+        </div>
+        <button class="btn btn-light" onclick="openCart()">View my cart →</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div><div class="footer-brand">VELORA</div><p>A modern shopping experience with simple WhatsApp ordering.</p></div>
+      <div><strong>Shop</strong><button onclick="scrollToProducts()">All products</button><button onclick="scrollToCategories()">Categories</button></div>
+      <div><strong>Need help?</strong><p>Message us directly on WhatsApp for product questions and order support.</p><a id="footerWhatsapp" target="_blank" rel="noopener">WhatsApp us →</a></div>
+    </div>
+    <div class="container footer-bottom">© 2026 Velora Shop. Demo storefront.</div>
+  </footer>
+
+  <div class="overlay" id="overlay" onclick="closePanels(event)">
+    <aside class="drawer" id="cartDrawer" onclick="event.stopPropagation()">
+      <div class="drawer-head"><h2>Your cart</h2><button onclick="closeCart()">×</button></div>
+      <div id="cartItems" class="cart-items"></div>
+      <div class="cart-summary" id="cartSummary"></div>
+      <button class="btn btn-dark full" id="checkoutBtn" onclick="openCheckout()">Proceed to checkout</button>
+    </aside>
+  </div>
+
+  <div class="modal-overlay" id="productModal" onclick="closeProduct(event)">
+    <div class="product-modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeProduct()">×</button>
+      <div id="productDetail"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="checkoutModal" onclick="closeCheckout(event)">
+    <div class="checkout-modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeCheckout()">×</button>
+      <div class="checkout-layout">
+        <div>
+          <span class="eyebrow">CHECKOUT</span>
+          <h2>Where should we send your order?</h2>
+          <p class="muted">Your order will be prepared as a WhatsApp message. No online payment is required for this demo.</p>
+          <form id="checkoutForm" onsubmit="placeOrder(event)">
+            <div class="form-grid">
+              <label>Full name<input required name="name" placeholder="Your name"></label>
+              <label>Phone number<input required name="phone" inputmode="numeric" pattern="[0-9]{10}" placeholder="10-digit number"></label>
+            </div>
+            <label>Address<textarea required name="address" rows="3" placeholder="House / flat, street, area"></textarea></label>
+            <div class="form-grid">
+              <label>City<input required name="city" placeholder="City"></label>
+              <label>Pincode<input required name="pincode" inputmode="numeric" pattern="[0-9]{6}" placeholder="6-digit pincode"></label>
+            </div>
+            <button class="btn whatsapp-btn full" type="submit">Order on WhatsApp <span>↗</span></button>
+          </form>
+        </div>
+        <div class="checkout-summary" id="checkoutSummary"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
